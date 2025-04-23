@@ -51,7 +51,7 @@ public class UIManager : MonoBehaviour
         }
 
         UpdateBananaText();
-        UpdateScore(0);
+        UpdateScore(GameData.Score);
     }
 
     void Update()
