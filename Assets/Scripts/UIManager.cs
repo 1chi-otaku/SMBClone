@@ -4,11 +4,14 @@ using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
+    public static UIManager Instance { get; private set; }
+
     [Header("UI Elements")]
     [SerializeField] private TextMeshProUGUI bananaText;
     [SerializeField] private TextMeshProUGUI timeText;
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private TextMeshProUGUI speedText;
+    [SerializeField] private TMP_Text scoreText;
 
     [Header("Timer Settings")]
     [SerializeField] private int startTime = 60;
@@ -18,6 +21,17 @@ public class UIManager : MonoBehaviour
     private int maxBananas;
     private int collectedBananas;
     private Rigidbody playerRb;
+
+    private void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
 
     void Start()
     {
@@ -37,6 +51,7 @@ public class UIManager : MonoBehaviour
         }
 
         UpdateBananaText();
+        UpdateScore(0);
     }
 
     void Update()
@@ -51,9 +66,16 @@ public class UIManager : MonoBehaviour
         UpdateBananaText();
     }
 
-    private void UpdateBananaText()
+    public void UpdateBananaText()
     {
-        bananaText.text = $"{collectedBananas.ToString("D3")}/{maxBananas.ToString("D3")}";
+        int collected = CollectibleManager.Instance.GetCollectedCount();
+        int total = CollectibleManager.Instance.TotalCount;
+        bananaText.text = $"{collected.ToString("D3")}/{total.ToString("D3")}";
+    }
+
+    public void UpdateScore(int score)
+    {
+        scoreText.text = score.ToString("D5");
     }
 
     private void UpdateTimer()

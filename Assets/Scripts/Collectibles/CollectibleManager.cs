@@ -6,6 +6,9 @@ public class CollectibleManager : MonoBehaviour
 
     private int totalCollected = 0;
     private int totalOnMap = 0;
+    private int score = 0;
+
+
 
     private void Awake()
     {
@@ -17,7 +20,6 @@ public class CollectibleManager : MonoBehaviour
             return;
         }
 
-        // Новый способ найти все Collectible
         totalOnMap = Object.FindObjectsByType<Collectible>(FindObjectsSortMode.None).Length;
     }
 
@@ -34,17 +36,16 @@ public class CollectibleManager : MonoBehaviour
     private void AddCollectible(int amount)
     {
         totalCollected += amount;
+        score += 100 * amount;
 
-        Debug.Log($"Collected: {totalCollected}/{totalOnMap}");
+        Debug.Log($"Collected: {totalCollected}/{totalOnMap} | Score: {score}");
 
-        // Обновляем UI
-        FindObjectOfType<UIManager>()?.AddBanana();
+        UIManager.Instance?.AddBanana();
+        UIManager.Instance?.UpdateScore(score);
     }
 
-    public int GetCollectedCount()
-    {
-        return totalCollected;
-    }
-
+    public int GetCollectedCount() => totalCollected;
     public int TotalCount => totalOnMap;
+    public int GetScore() => score;
+
 }
