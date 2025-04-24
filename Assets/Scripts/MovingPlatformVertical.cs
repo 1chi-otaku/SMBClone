@@ -12,7 +12,6 @@ public class MovingPlatformVertical : MonoBehaviour
     private bool started = false;
 
     private float totalDistance => downDistance + upDistance;
-    private float direction = -1f;
 
     void Start()
     {

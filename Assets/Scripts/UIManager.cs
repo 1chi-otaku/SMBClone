@@ -12,6 +12,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private TextMeshProUGUI speedText;
     [SerializeField] private TMP_Text scoreText;
+    [SerializeField] private GameObject fallText;
 
     [Header("Timer Settings")]
     [SerializeField] private int startTime = 60;
@@ -38,13 +39,13 @@ public class UIManager : MonoBehaviour
         timeRemaining = startTime;
         levelText.text = SceneManager.GetActiveScene().name;
 
-        var collectibleManager = FindObjectOfType<CollectibleManager>();
+        var collectibleManager = FindFirstObjectByType<CollectibleManager>();
         if (collectibleManager != null)
         {
             maxBananas = collectibleManager.TotalCount;
         }
 
-        var player = FindObjectOfType<PlayerController>();
+        var player = FindFirstObjectByType<PlayerController>();
         if (player != null)
         {
             playerRb = player.GetComponent<Rigidbody>();
@@ -78,6 +79,12 @@ public class UIManager : MonoBehaviour
         scoreText.text = score.ToString("D5");
     }
 
+    public void ShowFallText()
+    {
+        if (fallText != null)
+            fallText.SetActive(true);
+    }
+
     private void UpdateTimer()
     {
         if (!isTimerRunning) return;
@@ -86,14 +93,26 @@ public class UIManager : MonoBehaviour
         timeRemaining = Mathf.Max(0f, timeRemaining);
         timeText.text = Mathf.CeilToInt(timeRemaining).ToString("D3");
 
-        // if (timeRemaining <= 0) { // TODO: что-то сделать }
+        if (timeRemaining <= 0) {
+
+            GameData.Score = 0;
+
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+   
+        
+        }
+    }
+
+    public void StopTimer()
+    {
+        isTimerRunning = false;
     }
 
     private void UpdateSpeedText()
     {
         if (playerRb == null) return;
 
-        float speed = playerRb.linearVelocity.magnitude * 3.6f; // м/с → км/ч
+        float speed = playerRb.linearVelocity.magnitude * 3.6f; 
         speedText.text = $"{speed:F0} km/h";
     }
 }
