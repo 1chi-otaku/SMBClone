@@ -6,7 +6,7 @@ public class CollectibleManager : MonoBehaviour
 
     private int totalCollected = 0;
     private int totalOnMap = 0;
-    private int score = 0;
+    private int score = GameData.Score;
 
 
 
