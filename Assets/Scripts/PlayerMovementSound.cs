@@ -4,10 +4,13 @@
 public class PlayerMovementSound : MonoBehaviour
 {
     [SerializeField] private AudioClip movementClip;
+    [SerializeField] private AudioClip fallClip;          // Звук падения
     [SerializeField] private float minSpeedKmh = 1f;
     [SerializeField] private float maxSpeedKmh = 40f;
-    [SerializeField] private float maxInterval = 1.0f;  // на низкой скорости — медленно
-    [SerializeField] private float minInterval = 0.1f;  // на высокой скорости — часто
+    [SerializeField] private float maxInterval = 1.0f;
+    [SerializeField] private float minInterval = 0.1f;
+
+    [SerializeField] private float fallSoundThreshold = 5f; // Порог силы удара для звука падения
 
     private AudioSource audioSource;
     private Rigidbody rb;
@@ -18,8 +21,7 @@ public class PlayerMovementSound : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.playOnAwake = false;
-        audioSource.clip = movementClip;
-        audioSource.volume = 0.3f;
+        audioSource.volume = 0.7f;
     }
 
     void Update()
@@ -32,7 +34,6 @@ public class PlayerMovementSound : MonoBehaviour
             return;
         }
 
-        // t увеличивается с ростом скорости
         float t = Mathf.InverseLerp(minSpeedKmh, maxSpeedKmh, speedKmh);
         float interval = Mathf.Lerp(maxInterval, minInterval, t);
 
@@ -42,6 +43,17 @@ public class PlayerMovementSound : MonoBehaviour
         {
             timer = 0f;
             audioSource.PlayOneShot(movementClip);
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        // Проверяем силу удара
+        float impactForce = collision.impulse.magnitude / Time.fixedDeltaTime;
+
+        if (impactForce > fallSoundThreshold)
+        {
+            audioSource.PlayOneShot(fallClip);
         }
     }
 }
