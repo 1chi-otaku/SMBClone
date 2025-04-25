@@ -4,13 +4,13 @@
 public class PlayerMovementSound : MonoBehaviour
 {
     [SerializeField] private AudioClip movementClip;
-    [SerializeField] private AudioClip fallClip;          // Звук падения
+    [SerializeField] private AudioClip fallClip;          
     [SerializeField] private float minSpeedKmh = 1f;
     [SerializeField] private float maxSpeedKmh = 40f;
     [SerializeField] private float maxInterval = 1.0f;
     [SerializeField] private float minInterval = 0.1f;
 
-    [SerializeField] private float fallSoundThreshold = 5f; // Порог силы удара для звука падения
+    [SerializeField] private float fallSoundThreshold = 5f; 
 
     private AudioSource audioSource;
     private Rigidbody rb;

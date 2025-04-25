@@ -11,31 +11,28 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float followHeight = 5f;
     [SerializeField] private float followSmoothness = 5f;
 
-    // Вращение камеры по горизонтали (правый стик)
+    // Camera rotation speed
     [SerializeField] private float cameraRotateSpeed = 100f;
 
     private float horizontalInput;
     private float verticalInput;
 
-    private float camYaw = 0f;   // Вращение камеры вокруг Y
+    private float camYaw = 0f;   // Camera spin Y
 
     void Update()
     {
-        // Ввод движения (левый стик)
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
 
-        // Ввод вращения камеры по горизонтали (правый стик)
+        // horizontal
         float camHorizontal = Input.GetAxis("RightStickHorizontal");
-        // float camVertical = Input.GetAxis("RightStickVertical"); // НЕ используем вертикальный ввод с правого стика
 
-        // Обновляем угол поворота камеры только по горизонтали
         camYaw += camHorizontal * cameraRotateSpeed * Time.deltaTime;
 
-        // Применяем вращение камеры (без вертикального наклона)
+        // enable camera rotation 
         transform.rotation = Quaternion.Euler(0f, camYaw, 0f);
 
-        // Визуальный наклон камеры (типа tilt), только по движению игрока (левый стик)
+        // tilt
         cameraTransform.localRotation = Quaternion.Lerp(
             cameraTransform.localRotation,
             Quaternion.Euler(-verticalInput * maxTiltAngleVertical, 0f, -horizontalInput * maxTiltAngleHorizontal),
@@ -46,7 +43,7 @@ public class CameraController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Рассчитываем движение игрока относительно направления камеры (с учётом yaw)
+        // Ensure the player moves when the camera faces
         Vector3 forward = transform.forward;
         Vector3 right = transform.right;
 

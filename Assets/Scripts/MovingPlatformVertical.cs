@@ -32,13 +32,12 @@ public class MovingPlatformVertical : MonoBehaviour
             return;
         }
 
-        // Двигаем платформу вверх-вниз как синус
+       
         float cycleTime = totalDistance / speed;
         float offset = Mathf.PingPong(timeSinceStart * speed, totalDistance);
 
         transform.position = startPosition + Vector3.down * offset;
 
-        // Сброс времени, чтобы избежать переполнения float
         if (timeSinceStart > 1000f)
             timeSinceStart = 0f;
     }

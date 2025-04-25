@@ -24,14 +24,12 @@ public class Collectible : MonoBehaviour
             isCollected = true;
             OnCollectiblePicked?.Invoke(value);
 
-            // Отключаем визуал и физику
             foreach (var renderer in GetComponentsInChildren<Renderer>())
                 renderer.enabled = false;
 
             foreach (var collider in GetComponents<Collider>())
                 collider.enabled = false;
 
-            // Проигрываем звук
             if (pickupSound != null && audioSource != null)
             {
                 audioSource.PlayOneShot(pickupSound);
